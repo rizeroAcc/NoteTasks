@@ -71,4 +71,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(project(":current-task-list"))
+    implementation(project(":finished-task-list"))
+    implementation(project(":core-navigation"))
 }
