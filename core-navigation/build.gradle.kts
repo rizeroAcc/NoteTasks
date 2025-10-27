@@ -1,13 +1,10 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.ksp)
-    alias(libs.plugins.android.hilt)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.example.finished_task_list"
+    namespace = "com.example.core_navigation"
     compileSdk = 36
 
     defaultConfig {
@@ -40,18 +37,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    implementation(libs.android.hilt)
-
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.activity.compose)
-
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    ksp(libs.android.hilt.compiler)
+    //nav 3
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

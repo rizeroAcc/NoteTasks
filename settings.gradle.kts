@@ -23,3 +23,4 @@ rootProject.name = "NoteTasks"
 include(":app")
 include(":current-task-list")
 include(":finished-task-list")
+include(":core-navigation")

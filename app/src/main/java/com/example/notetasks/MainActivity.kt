@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
 import com.example.notetasks.ui.theme.NoteTasksTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +21,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NoteTasksTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                NavDisplay(
+                    backStack = navigator.backStack,
+                    modifier = Modifier.padding(paddingValues),
+                    onBack = { navigator.goBack() },
+                    entryProvider = entryProvider {
+                        entryProviderScopes.forEach { builder -> this.builder() }
+                    }
+                )
             }
         }
     }
