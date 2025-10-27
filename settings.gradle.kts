@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "NoteTasks"
 include(":app")
-include(":tasklist")
+include(":current-task-list")
+include(":finished-task-list")
