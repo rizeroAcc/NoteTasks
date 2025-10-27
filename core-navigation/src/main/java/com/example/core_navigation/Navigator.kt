@@ -23,6 +23,7 @@ class Navigator(startDestination: Any) {
         backStack.add(destination)
     }
 
+    @Suppress("UNRESOLVED_REFERENCE")
     fun goBack(){
         backStack.removeLastOrNull()
     }

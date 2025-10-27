@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,6 +16,7 @@ import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.NavEvent
 import com.example.core_navigation.Navigator
 import com.example.finished_task_list.presentation.FinishedTaskListScreen
+import com.example.notetasks.ui.components.BottomBar
 import com.example.notetasks.ui.theme.NoteTasksTheme
 import com.example.tasklist.presentation.TaskListScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,30 +45,24 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NoteTasksTheme {
-                NavDisplay(
-                    backStack = navigator.backStack,
-                    onBack = { navigator.goBack() },
-                    entryProvider = entryProvider {
-                        entryProviderScopes.forEach { builder -> this.builder() }
+                val currentDestination = navigator.backStack.lastOrNull()
+                Scaffold(
+                    bottomBar = {
+                        BottomBar(navigator = navigator, currentDestination = currentDestination)
                     }
                 )
+                { innerPadding->
+                    NavDisplay(
+                        modifier = Modifier.padding(innerPadding),
+                        backStack = navigator.backStack,
+                        onBack = { navigator.goBack() },
+                        entryProvider = entryProvider {
+                            entryProviderScopes.forEach { builder -> this.builder() }
+                        }
+                    )
+                }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NoteTasksTheme {
-        Greeting("Android")
-    }
-}
