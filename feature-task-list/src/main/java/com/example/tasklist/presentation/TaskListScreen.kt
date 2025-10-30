@@ -28,7 +28,7 @@ import java.nio.file.WatchEvent
 object TaskListScreen
 
 @Composable
-fun TaskListScreen(onBtnClick : () -> Unit){
+fun TaskListScreen(onBtnClick : () -> Unit, onCardClick: () -> Unit){
     Box(modifier = Modifier.fillMaxSize()){
         LazyColumn(
             modifier = Modifier
@@ -37,7 +37,7 @@ fun TaskListScreen(onBtnClick : () -> Unit){
             contentPadding = PaddingValues(24.dp)
         ) {
             items(30){
-                TaskCard("Имя задания", "Сделай че-то много - много - много - много - много - текста")
+                TaskCard("Имя задания", "Сделай че-то много - много - много - много - много - текста", onCardClick = onCardClick)
             }
         }
         Button(

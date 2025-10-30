@@ -1,4 +1,4 @@
-package com.example.finished_task_list.presentation
+package com.example.tasklist.presentation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

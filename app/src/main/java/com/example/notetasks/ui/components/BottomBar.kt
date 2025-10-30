@@ -9,7 +9,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.core_navigation.Navigator
-import com.example.finished_task_list.presentation.FinishedTaskListScreen
+import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.tasklist.presentation.TaskListScreen
 
 @Composable

@@ -22,13 +22,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun TaskCard(taskName : String, shortDescription : String,){
+fun TaskCard(taskName : String, shortDescription : String, onCardClick:()->Unit){
     Card(modifier = Modifier
         .drawBehind({Color.Red})
         .fillMaxWidth()
         .heightIn(50.dp,100.dp),
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
+        colors = CardDefaults.cardColors(containerColor = Color.LightGray),
+        onClick = onCardClick
         ) {
         Column() {
             Row(
@@ -51,5 +52,5 @@ fun TaskCard(taskName : String, shortDescription : String,){
 @Preview
 @Composable
 fun TaskCardPreview(){
-    TaskCard(taskName = "Имя задания", shortDescription = "Сделай че-то")
+    TaskCard(taskName = "Имя задания", shortDescription = "Сделай че-то", onCardClick = {})
 }

@@ -5,5 +5,7 @@ sealed class NavEvent {
     //Events
     object NavToCurrentTaskList : NavEvent()
     object NavToFinishedTaskList : NavEvent()
-
+    object HideModal : NavEvent()
+    object HideAllModal : NavEvent()
+    object ShowTaskCard : NavEvent()
 }
