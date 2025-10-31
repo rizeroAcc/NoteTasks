@@ -18,7 +18,7 @@ import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.notetasks.ui.components.BottomBar
 import com.example.notetasks.ui.components.ModalNavigation
 import com.example.notetasks.ui.theme.NoteTasksTheme
-import com.example.task_feature.presentation.ModalTaskCard
+import com.example.task_feature.presentation.ModalTaskCardData
 import com.example.tasklist.presentation.TaskListScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,7 +45,12 @@ class MainActivity : ComponentActivity() {
                 NavEvent.NavToCurrentTaskList -> navigator.goTo(TaskListScreen)
                 NavEvent.HideAllModal -> navigator.hideAllModalWindows()
                 NavEvent.HideModal -> navigator.hideModalWindow()
-                NavEvent.ShowTaskCard -> navigator.showModal(ModalTaskCard)
+                is NavEvent.ShowTaskCard -> navigator.showModal(ModalTaskCardData(
+                    taskDescription = event.taskDescription,
+                    taskTitle = event.taskTitle,
+                    taskCategory = event.taskCategory,
+                    deadline = event.deadline
+                ))
             }
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -78,6 +83,7 @@ class MainActivity : ComponentActivity() {
                     )
                     if (currentModal != null) {
                         ModalNavigation(
+                            modifier = Modifier.padding(innerPadding),
                             backStack = navigator.modalWindowBackStack,
                             onDismiss = { navigator.handleEvent(NavEvent.HideModal) },
                             entryProvider = entryProvider {

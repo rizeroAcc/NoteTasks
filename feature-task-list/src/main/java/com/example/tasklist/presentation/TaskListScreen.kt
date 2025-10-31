@@ -27,8 +27,16 @@ import java.nio.file.WatchEvent
 
 object TaskListScreen
 
+@Deprecated("For test only")
+data class TaskDeatils(
+    val taskTitle: String,
+    val taskDescription: String,
+    val deadline : String? = null,
+    val taskCategory : String
+)
+
 @Composable
-fun TaskListScreen(onBtnClick : () -> Unit, onCardClick: () -> Unit){
+fun TaskListScreen(onBtnClick : () -> Unit, onCardClick: (taskDetails : TaskDeatils) -> Unit){
     Box(modifier = Modifier.fillMaxSize()){
         LazyColumn(
             modifier = Modifier
@@ -37,7 +45,11 @@ fun TaskListScreen(onBtnClick : () -> Unit, onCardClick: () -> Unit){
             contentPadding = PaddingValues(24.dp)
         ) {
             items(30){
-                TaskCard("Имя задания", "Сделай че-то много - много - много - много - много - текста", onCardClick = onCardClick)
+                TaskCard("Имя задания", "Сделай че-то много - много - много - много - много - текста", onCardClick = {
+                    onCardClick(
+                        TaskDeatils("Имя задания", taskDescription = "Сделай че-то много - много - много - много - много - текста", taskCategory = "Срочно", deadline = "26.05 23:30")
+                    )
+                })
             }
         }
         Button(

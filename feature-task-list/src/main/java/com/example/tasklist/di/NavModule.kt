@@ -19,8 +19,13 @@ class NavModule {
     @Provides
     fun provideTaskListNavGraphInstallerProvider(navigator : Navigator) : EntryProviderInstaller = {
         entry<TaskListScreen> {
-            TaskListScreen(onCardClick = {
-                navigator.handleEvent(NavEvent.ShowTaskCard)
+            TaskListScreen(onCardClick = { taskDeatils ->
+                navigator.handleEvent(NavEvent.ShowTaskCard(
+                    taskTitle = taskDeatils.taskTitle,
+                    taskCategory = taskDeatils.taskCategory,
+                    taskDescription = taskDeatils.taskDescription,
+                    deadline = taskDeatils.deadline
+                ))
             }, onBtnClick = {
                 navigator.handleEvent(NavEvent.NavToFinishedTaskList)
             })

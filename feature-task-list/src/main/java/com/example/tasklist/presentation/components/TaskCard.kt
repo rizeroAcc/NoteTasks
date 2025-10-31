@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.tasklist.presentation.TaskDeatils
 
 @Composable
 fun TaskCard(taskName : String, shortDescription : String, onCardClick:()->Unit){

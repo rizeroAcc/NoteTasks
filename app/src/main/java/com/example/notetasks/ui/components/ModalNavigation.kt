@@ -16,6 +16,7 @@ import androidx.navigation3.ui.NavDisplay
 
 @Composable
 fun ModalNavigation(
+    modifier: Modifier,
     backStack: List<Any>,
     onDismiss: () -> Unit,
     entryProvider: (key: Any) -> NavEntry<Any>
@@ -24,7 +25,7 @@ fun ModalNavigation(
 
     // Затемнение фона
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.5f))
             .clickable(onClick = onDismiss),
@@ -33,8 +34,9 @@ fun ModalNavigation(
         // Контент модального окна
         Box(
             modifier = Modifier
-                .fillMaxSize(0.8f)
-                .clickable(enabled = false) {} // Предотвращает закрытие при клике на контент
+                .padding(24.dp)
+                .clickable(enabled = false) {},// Предотвращает закрытие при клике на контент
+            contentAlignment = Alignment.Center
         ) {
             NavDisplay(
                 backStack = backStack,
