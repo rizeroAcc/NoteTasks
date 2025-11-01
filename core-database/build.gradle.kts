@@ -39,6 +39,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
+    implementation(libs.kotlinx.serialization.core)
+
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
