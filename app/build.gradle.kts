@@ -72,6 +72,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(project(":feature-task-list"))
-    implementation(project(":task-feature"))
+    implementation(project(":feature-task"))
     implementation(project(":core-navigation"))
 }

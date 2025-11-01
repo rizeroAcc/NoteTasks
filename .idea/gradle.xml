@@ -11,10 +11,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core-database" />
             <option value="$PROJECT_DIR$/core-navigation" />
+            <option value="$PROJECT_DIR$/feature-task" />
             <option value="$PROJECT_DIR$/feature-task-list" />
-            <option value="$PROJECT_DIR$/finished-task-list" />
-            <option value="$PROJECT_DIR$/task-feature" />
           </set>
         </option>
       </GradleProjectSettings>
