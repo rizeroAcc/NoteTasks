@@ -13,5 +13,5 @@ interface FinishedTaskDAO {
     @Query("""SELECT * FROM finishedTasks""")
     suspend fun getAllFinishedTasks() : List<FinishedTaskEntity>
     @Query("""SELECT * FROM finishedTasks WHERE id =:id""")
-    suspend fun getFinishedTaskByID(id : Long)
+    suspend fun getFinishedTaskByID(id : Long) : FinishedTaskEntity
 }

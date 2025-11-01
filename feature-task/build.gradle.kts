@@ -59,4 +59,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":core-navigation"))
+    implementation(project(":core-database"))
 }

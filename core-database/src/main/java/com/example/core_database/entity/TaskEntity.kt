@@ -7,9 +7,9 @@ import kotlinx.serialization.SerialName
 
 @Entity(tableName = "tasks")
 data class TaskEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @SerialName("ID")
-    val id : Long,
+    val id : Long = 0,
     @SerialName("taskName")
     val taskName : String,
     @SerialName("description")
