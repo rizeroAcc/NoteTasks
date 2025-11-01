@@ -1,6 +1,7 @@
 package com.example.task_feature.presentation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -49,6 +52,8 @@ fun ModalTaskCard(
     taskCategory : String
 ){
     var taskDescriptionState by remember { mutableStateOf(taskDescription) }
+    var taskCategoryState by remember { mutableStateOf(taskCategory) }
+    var showMenu by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color.LightGray)
@@ -83,10 +88,48 @@ fun ModalTaskCard(
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
-                    Text(
-                        modifier = Modifier.padding(top = 12.dp, start = 4.dp),
-                        text = "Категория: $taskCategory"
-                    )
+                    Box{
+                        Text(
+                            modifier = Modifier
+                                .padding(top = 12.dp, start = 4.dp)
+                                .clickable { showMenu = true },
+                            text = "Категория: $taskCategory"
+                        )
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = {showMenu = false}
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Срочное") },
+                                onClick = {
+                                    // Обработка выбора
+                                    showMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Несрочное") },
+                                onClick = {
+                                    // Обработка выбора
+                                    showMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Долгосрочное") },
+                                onClick = {
+                                    // Обработка выбора
+                                    showMenu = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Повторяющееся") },
+                                onClick = {
+                                    // Обработка выбора
+                                    showMenu = false
+                                }
+                            )
+                        }
+                    }
+
                     HorizontalDivider(
                         color = Color.Gray,
                         thickness = 1.dp,
