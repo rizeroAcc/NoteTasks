@@ -2,8 +2,10 @@ package com.example.task_feature.di
 
 import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.Navigator
-import com.example.task_feature.presentation.ModalTaskCard
-import com.example.task_feature.presentation.ModalTaskCardKey
+import com.example.task_feature.presentation.createtask.ModalCreateTask
+import com.example.task_feature.presentation.createtask.ModalCreateTaskCardKey
+import com.example.task_feature.presentation.edittask.ModalEditTask
+import com.example.task_feature.presentation.edittask.ModalEditTaskCardKey
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +18,16 @@ class NavModule {
      @IntoSet
      @Provides
      fun provideNavGraphEntryProviderInstaller(navigator: Navigator) : EntryProviderInstaller = {
-         entry<ModalTaskCardKey>{ key->
-             ModalTaskCard(
+         entry<ModalEditTaskCardKey>{ key->
+             ModalEditTask(
                  taskID = key.taskID,
                 onNavigationEvent = { navEvent->
                     navigator.handleEvent(navEvent)
                 }
              )
+         }
+         entry<ModalCreateTaskCardKey> {
+             ModalCreateTask() {  }
          }
      }
 }

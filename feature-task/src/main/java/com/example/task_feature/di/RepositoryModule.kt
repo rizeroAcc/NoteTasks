@@ -11,7 +11,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class RemositoryModule {
+class RepositoryModule {
     @Provides
     fun provideTaskRepository(
         taskDatasource: TaskDatasource,

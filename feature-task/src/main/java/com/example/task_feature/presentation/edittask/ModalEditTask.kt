@@ -1,4 +1,4 @@
-package com.example.task_feature.presentation
+package com.example.task_feature.presentation.edittask
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,23 +31,22 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.core_navigation.NavEvent
 import com.example.task_feature.domain.Task
-import java.time.Instant
 
-data class ModalTaskCardKey(
+data class ModalEditTaskCardKey(
     val taskID : Long
 )
 
 @Composable
-fun ModalTaskCard(
+fun ModalEditTask(
     taskID : Long,
     onNavigationEvent : (navEvent : NavEvent) -> Unit
 ){
-    val viewModel : TaskCardViewModel = hiltViewModel<TaskCardViewModel, TaskCardViewModel.Factory>(
+    val viewModel : ModalEditTaskViewModel = hiltViewModel<ModalEditTaskViewModel, ModalEditTaskViewModel.Factory>(
         creationCallback = { factory ->
             factory.create(taskID = taskID)
         }
     )
-    ModalTaskCardView(
+    ModalEditTaskView(
         onNavigationEvent = onNavigationEvent,
         onEvent = { event->
             viewModel.handleEvent(event = event)
@@ -58,13 +57,11 @@ fun ModalTaskCard(
 }
 
 @Composable
-fun ModalTaskCardView(
+fun ModalEditTaskView(
     onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
-    onEvent : (event : TaskEvent) -> Unit = {},
+    onEvent : (event : ModalEditTaskEvent) -> Unit = {},
     taskState : Task = Task(0,"","",null,"")
 ){
-    var taskDescriptionState by remember { mutableStateOf(taskState.taskDescription) }
-    var taskCategoryState by remember { mutableStateOf(taskState.category) }
     var showMenu by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -114,28 +111,40 @@ fun ModalTaskCardView(
                             DropdownMenuItem(
                                 text = { Text("Срочное") },
                                 onClick = {
-                                    // Обработка выбора
+                                    onEvent(
+                                        ModalEditTaskEvent.ChangeTaskState(
+                                        taskState.copy(category ="Срочное"
+                                        )))
                                     showMenu = false
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text("Несрочное") },
                                 onClick = {
-                                    // Обработка выбора
+                                    onEvent(
+                                        ModalEditTaskEvent.ChangeTaskState(
+                                        taskState.copy(category ="Несрочное"
+                                        )))
                                     showMenu = false
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text("Долгосрочное") },
                                 onClick = {
-                                    // Обработка выбора
+                                    onEvent(
+                                        ModalEditTaskEvent.ChangeTaskState(
+                                        taskState.copy(category ="Долгосрочное"
+                                        )))
                                     showMenu = false
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text("Повторяющееся") },
                                 onClick = {
-                                    // Обработка выбора
+                                    onEvent(
+                                        ModalEditTaskEvent.ChangeTaskState(
+                                        taskState.copy(category ="Повторяющееся"
+                                        )))
                                     showMenu = false
                                 }
                             )
@@ -149,9 +158,12 @@ fun ModalTaskCardView(
                     )
                     OutlinedTextField(
                         modifier = Modifier.fillMaxWidth(),
-                        value = taskDescriptionState,
-                        onValueChange = { newValue->
-                            taskDescriptionState = newValue
+                        value = taskState.taskDescription,
+                        onValueChange = { newDescription->
+                            onEvent(
+                                ModalEditTaskEvent.ChangeTaskState(
+                                taskState.copy(taskDescription = newDescription)
+                            ))
                         },
                         label = {
                             Text("Описание задания")
@@ -163,8 +175,15 @@ fun ModalTaskCardView(
                 }
             }
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                Button(onClick = {}) { Text("Сохранить") }
-                Button(onClick = {}) { Text("Завершить")}
+                Button(onClick = {
+                    onEvent(ModalEditTaskEvent.UpdateTaskCard())
+                    onNavigationEvent(NavEvent.NavBack)
+                }) { Text("Сохранить") }
+                Button(onClick = {
+                    //todo сделать возможность завершения как не важное
+                    onEvent(ModalEditTaskEvent.FinishTask(false))
+                    onNavigationEvent(NavEvent.NavBack)
+                }) { Text("Завершить")}
             }
         }
     }
@@ -172,6 +191,6 @@ fun ModalTaskCardView(
 
 @Composable
 @Preview
-fun ModalTaskCardPreview(){
-    ModalTaskCardView()
+fun ModalEditTaskPreview(){
+    ModalEditTaskView()
 }

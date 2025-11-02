@@ -13,4 +13,6 @@ sealed class NavEvent {
         val deadline : String? = null,
         val taskCategory : String
     ) : NavEvent()
+
+    object ShowCreateTaskModal : NavEvent()
 }
