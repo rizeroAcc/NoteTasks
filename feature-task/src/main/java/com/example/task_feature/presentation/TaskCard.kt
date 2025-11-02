@@ -6,17 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
@@ -24,35 +19,52 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.core_navigation.NavEvent
+import com.example.task_feature.domain.Task
+import java.time.Instant
 
-data class ModalTaskCardData(
-    val taskTitle: String,
-    val taskDescription: String,
-    val deadline : String? = null,
-    val taskCategory : String
+data class ModalTaskCardKey(
+    val taskID : Long
 )
+
 @Composable
 fun ModalTaskCard(
-    taskTitle : String,
-    taskDescription: String,
-    deadline : String? = null,
-    taskCategory : String
+    taskID : Long,
+    onNavigationEvent : (navEvent : NavEvent) -> Unit
 ){
-    var taskDescriptionState by remember { mutableStateOf(taskDescription) }
-    var taskCategoryState by remember { mutableStateOf(taskCategory) }
+    val viewModel : TaskCardViewModel = hiltViewModel<TaskCardViewModel, TaskCardViewModel.Factory>(
+        creationCallback = { factory ->
+            factory.create(taskID = taskID)
+        }
+    )
+    ModalTaskCardView(
+        onNavigationEvent = onNavigationEvent,
+        onEvent = { event->
+            viewModel.handleEvent(event = event)
+        },
+        taskState = Task(0,"","",null,"")
+    )
+
+}
+
+@Composable
+fun ModalTaskCardView(
+    onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
+    onEvent : (event : TaskEvent) -> Unit = {},
+    taskState : Task = Task(0,"","",null,"")
+){
+    var taskDescriptionState by remember { mutableStateOf(taskState.taskDescription) }
+    var taskCategoryState by remember { mutableStateOf(taskState.category) }
     var showMenu by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -65,7 +77,7 @@ fun ModalTaskCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = taskTitle,
+                    text = taskState.taskName,
                     fontSize = 20.sp
                 )
             }
@@ -77,10 +89,10 @@ fun ModalTaskCard(
                     .padding(8.dp)
                     ){
                 Column(modifier = Modifier.fillMaxWidth()){
-                    if (deadline != null){
+                    if (taskState.deadline != null){
                         Text(
                             modifier = Modifier.padding(top = 12.dp, start = 4.dp),
-                            text = "Дедлайн: $deadline"
+                            text = "Дедлайн: $taskState.deadline"
                         )
                         HorizontalDivider(
                             color = Color.Gray,
@@ -93,7 +105,7 @@ fun ModalTaskCard(
                             modifier = Modifier
                                 .padding(top = 12.dp, start = 4.dp)
                                 .clickable { showMenu = true },
-                            text = "Категория: $taskCategory"
+                            text = "Категория: ${taskState.category}"
                         )
                         DropdownMenu(
                             expanded = showMenu,
@@ -161,10 +173,5 @@ fun ModalTaskCard(
 @Composable
 @Preview
 fun ModalTaskCardPreview(){
-    ModalTaskCard(
-        taskTitle = "Название задания",
-        taskDescription = "Сделай чето там",
-        deadline = "26.04/21:30",
-        taskCategory = "Срочное"
-    )
+    ModalTaskCardView()
 }
