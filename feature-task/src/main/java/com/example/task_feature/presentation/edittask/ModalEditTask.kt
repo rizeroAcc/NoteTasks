@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.core_navigation.NavEvent
 import com.example.task_feature.domain.Task
+import com.example.task_feature.domain.TaskCategory
 
 data class ModalEditTaskCardKey(
     val taskID : Long
@@ -51,7 +52,6 @@ fun ModalEditTask(
         onEvent = { event->
             viewModel.handleEvent(event = event)
         },
-        taskState = Task(0,"","",null,"")
     )
 
 }
@@ -60,7 +60,7 @@ fun ModalEditTask(
 fun ModalEditTaskView(
     onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
     onEvent : (event : ModalEditTaskEvent) -> Unit = {},
-    taskState : Task = Task(0,"","",null,"")
+    taskState : Task = Task(0,"","",null,TaskCategory.UNSPECIFIED)
 ){
     var showMenu by remember { mutableStateOf(false) }
     Card(
@@ -113,7 +113,7 @@ fun ModalEditTaskView(
                                 onClick = {
                                     onEvent(
                                         ModalEditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category ="Срочное"
+                                        taskState.copy(category = TaskCategory.NONURGENT
                                         )))
                                     showMenu = false
                                 }
@@ -123,7 +123,7 @@ fun ModalEditTaskView(
                                 onClick = {
                                     onEvent(
                                         ModalEditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category ="Несрочное"
+                                        taskState.copy(category = TaskCategory.URGENT
                                         )))
                                     showMenu = false
                                 }
@@ -133,7 +133,7 @@ fun ModalEditTaskView(
                                 onClick = {
                                     onEvent(
                                         ModalEditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category ="Долгосрочное"
+                                        taskState.copy(category = TaskCategory.LONGTIME
                                         )))
                                     showMenu = false
                                 }
@@ -143,7 +143,7 @@ fun ModalEditTaskView(
                                 onClick = {
                                     onEvent(
                                         ModalEditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category ="Повторяющееся"
+                                        taskState.copy(category = TaskCategory.REPEATABLE
                                         )))
                                     showMenu = false
                                 }

@@ -27,7 +27,11 @@ class NavModule {
              )
          }
          entry<ModalCreateTaskCardKey> {
-             ModalCreateTask() {  }
+             ModalCreateTask(
+                 onNavigationEvent = { navEvent ->
+                     navigator.handleEvent(navEvent)
+                 }
+             )
          }
      }
 }

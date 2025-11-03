@@ -18,6 +18,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,9 +32,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.core_navigation.NavEvent
 import com.example.task_feature.domain.Task
+import com.example.task_feature.domain.TaskCategory
 import com.example.task_feature.presentation.components.DateTimePeeker
 import com.example.task_feature.presentation.components.SimpleTextField
-import com.example.task_feature.presentation.edittask.ModalEditTaskView
 import com.example.task_feature.util.toDate
 import java.time.Instant
 
@@ -44,12 +45,13 @@ fun ModalCreateTask(
     onNavigationEvent : (navEvent : NavEvent) -> Unit
 ){
     val viewModel : ModalCreateTaskViewModel = hiltViewModel<ModalCreateTaskViewModel>()
+    val taskState by viewModel.taskState.collectAsState()
     ModalCreateTaskView(
         onNavigationEvent = onNavigationEvent,
         onEvent = { event->
-            //viewModel.handleEvent(event = event)
+            viewModel.handleEvent(event = event)
         },
-        taskState = Task(0,"","",null,"")
+        taskState = taskState
     )
 }
 
@@ -57,12 +59,10 @@ fun ModalCreateTask(
 fun ModalCreateTaskView(
     onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
     onEvent : (event : CreateTaskEvent) -> Unit = {},
-    taskState : Task = Task(0,"","",null,"")
+    taskState : Task = Task(0, "", "", null, TaskCategory.UNSPECIFIED)
 ){
     var showMenu by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
-    var selectedDeadline  by remember { mutableStateOf<Long?>(null) }
-    var taskName by remember { mutableStateOf("") }
     Box{
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -89,8 +89,12 @@ fun ModalCreateTaskView(
                     Column(modifier = Modifier.fillMaxWidth()){
                         SimpleTextField(
                             hint = "Введите название задания:",
-                            value = taskName,
-                            onValueChange = { newValue-> taskName = newValue},
+                            value = taskState.taskName,
+                            onValueChange = { newValue->
+                                onEvent(CreateTaskEvent.ChangeTaskState(
+                                    newTaskInfo = taskState.copy(taskName = newValue)
+                                ))
+                            },
                             modifier = Modifier.padding(top = 12.dp, start = 4.dp)
                         )
                         HorizontalDivider(
@@ -104,7 +108,7 @@ fun ModalCreateTaskView(
                                 .clickable(onClick = {
                                     showDialog = true
                                 }),
-                            text = "Дедлайн: " + selectedDeadline?.toDate() ?: "не указан"
+                            text = "Дедлайн: " + (taskState.deadline?.toEpochMilli()?.toDate() ?: "не указан")
                         )
                         HorizontalDivider(
                             color = Color.Gray,
@@ -125,24 +129,40 @@ fun ModalCreateTaskView(
                                 DropdownMenuItem(
                                     text = { Text("Срочное") },
                                     onClick = {
+                                        onEvent(
+                                            CreateTaskEvent.ChangeTaskState(
+                                                taskState.copy(category = TaskCategory.URGENT
+                                                )))
                                         showMenu = false
                                     }
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Несрочное") },
                                     onClick = {
+                                        onEvent(
+                                            CreateTaskEvent.ChangeTaskState(
+                                                taskState.copy(category = TaskCategory.NONURGENT
+                                                )))
                                         showMenu = false
                                     }
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Долгосрочное") },
                                     onClick = {
+                                        onEvent(
+                                            CreateTaskEvent.ChangeTaskState(
+                                                taskState.copy(category = TaskCategory.LONGTIME
+                                                )))
                                         showMenu = false
                                     }
                                 )
                                 DropdownMenuItem(
                                     text = { Text("Повторяющееся") },
                                     onClick = {
+                                        onEvent(
+                                            CreateTaskEvent.ChangeTaskState(
+                                                taskState.copy(category = TaskCategory.REPEATABLE
+                                                )))
                                         showMenu = false
                                     }
                                 )
@@ -158,7 +178,9 @@ fun ModalCreateTaskView(
                             modifier = Modifier.fillMaxWidth(),
                             value = taskState.taskDescription,
                             onValueChange = { newDescription->
-
+                                onEvent(CreateTaskEvent.ChangeTaskState(
+                                    newTaskInfo = taskState.copy(taskDescription = newDescription)
+                                ))
                             },
                             label = {
                                 Text("Описание задания")
@@ -171,16 +193,17 @@ fun ModalCreateTaskView(
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Button(onClick = {
-
+                        onEvent(CreateTaskEvent.CreateTask )
+                        onNavigationEvent(NavEvent.NavBack)
                     }) { Text("Создать") }
                 }
             }
         }
         if (showDialog){
             DateTimePeeker(
-                selectedTimeMills = if (selectedDeadline!=null) Instant.ofEpochMilli(selectedDeadline!!) else null
+                selectedTimeMills = if (taskState.deadline!=null) Instant.ofEpochMilli(taskState.deadline.toEpochMilli()) else null
             ) { selectedDeadlineMills->
-                selectedDeadline = selectedDeadlineMills
+                onEvent(CreateTaskEvent.ChangeTaskState(newTaskInfo = taskState.copy(deadline = Instant.ofEpochMilli(selectedDeadlineMills))))
                 showDialog = false
             }
         }

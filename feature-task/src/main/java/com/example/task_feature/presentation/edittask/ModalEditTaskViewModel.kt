@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.task_feature.data.repository.TaskRepository
 import com.example.task_feature.domain.Task
+import com.example.task_feature.domain.TaskCategory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -21,7 +22,7 @@ class ModalEditTaskViewModel@AssistedInject constructor(
     @Assisted private val taskID : Long,
 ) : ViewModel() {
     val taskState = MutableStateFlow<Task>(
-        Task(0, "", "", null, "")
+        Task(0, "", "", null, TaskCategory.UNSPECIFIED)
     )
     init {
         viewModelScope.launch {

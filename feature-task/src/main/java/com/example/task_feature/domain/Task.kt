@@ -7,5 +7,5 @@ data class Task(
     val taskName : String,
     val taskDescription: String,
     val deadline : Instant? = null,
-    val category : String,
+    val category : TaskCategory,
 )
