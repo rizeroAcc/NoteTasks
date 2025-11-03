@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.core_database.TaskDatabase
+import com.example.core_database.dao.FinishedTaskDAO
+import com.example.core_database.dao.TaskDAO
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,5 +23,14 @@ class DatabaseModule {
             klass = TaskDatabase::class.java,
             name = "taskDatabase"
         ).build()
+    }
+
+    @Provides
+    fun provideTaskDAO(taskDatabase: TaskDatabase) : TaskDAO {
+        return taskDatabase.taskDAO()
+    }
+    @Provides
+    fun provideFinishedTaskDAO(taskDatabase: TaskDatabase) : FinishedTaskDAO {
+        return taskDatabase.finishedTaskDAO()
     }
 }

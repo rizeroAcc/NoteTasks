@@ -26,8 +26,8 @@ class NavModule {
                     taskDescription = taskDeatils.taskDescription,
                     deadline = taskDeatils.deadline
                 ))
-            }, onBtnClick = {
-                navigator.handleEvent(NavEvent.NavToFinishedTaskList)
+            }, onCreateTaskClick = {
+                navigator.handleEvent(NavEvent.ShowCreateTaskModal)
             })
         }
         entry<FinishedTaskListScreen>{

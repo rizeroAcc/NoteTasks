@@ -9,7 +9,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.NavEvent
@@ -18,7 +20,8 @@ import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.notetasks.ui.components.BottomBar
 import com.example.notetasks.ui.components.ModalNavigation
 import com.example.notetasks.ui.theme.NoteTasksTheme
-import com.example.task_feature.presentation.ModalTaskCardData
+import com.example.task_feature.presentation.createtask.ModalCreateTaskCardKey
+import com.example.task_feature.presentation.edittask.ModalEditTaskCardKey
 import com.example.tasklist.presentation.TaskListScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -45,12 +48,8 @@ class MainActivity : ComponentActivity() {
                 NavEvent.NavToCurrentTaskList -> navigator.goTo(TaskListScreen)
                 NavEvent.HideAllModal -> navigator.hideAllModalWindows()
                 NavEvent.HideModal -> navigator.hideModalWindow()
-                is NavEvent.ShowTaskCard -> navigator.showModal(ModalTaskCardData(
-                    taskDescription = event.taskDescription,
-                    taskTitle = event.taskTitle,
-                    taskCategory = event.taskCategory,
-                    deadline = event.deadline
-                ))
+                is NavEvent.ShowTaskCard -> navigator.showModal(ModalEditTaskCardKey(0))
+                NavEvent.ShowCreateTaskModal -> navigator.showModal(ModalCreateTaskCardKey)
             }
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -79,7 +78,11 @@ class MainActivity : ComponentActivity() {
                                  },
                         entryProvider = entryProvider {
                             entryProviderScopes.forEach { builder -> this.builder() }
-                        }
+                        },
+                        entryDecorators = listOf(
+                            rememberSaveableStateHolderNavEntryDecorator(),
+                            rememberViewModelStoreNavEntryDecorator()
+                        )
                     )
                     if (currentModal != null) {
                         ModalNavigation(
