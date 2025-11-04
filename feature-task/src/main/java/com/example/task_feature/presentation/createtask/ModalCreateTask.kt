@@ -38,7 +38,7 @@ import com.example.task_feature.presentation.components.SimpleTextField
 import com.example.task_feature.util.toDate
 import java.time.Instant
 
-object ModalCreateTaskCardKey
+class ModalCreateTaskCardKey
 
 @Composable
 fun ModalCreateTask(

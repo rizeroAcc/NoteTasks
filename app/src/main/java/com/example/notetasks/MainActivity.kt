@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -35,8 +36,6 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var entryProviderScopes: Set<@JvmSuppressWildcards EntryProviderInstaller>
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 NavEvent.HideAllModal -> navigator.hideAllModalWindows()
                 NavEvent.HideModal -> navigator.hideModalWindow()
                 is NavEvent.ShowTaskCard -> navigator.showModal(ModalEditTaskCardKey(0))
-                NavEvent.ShowCreateTaskModal -> navigator.showModal(ModalCreateTaskCardKey)
+                NavEvent.ShowCreateTaskModal -> navigator.showModal(ModalCreateTaskCardKey())
             }
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
