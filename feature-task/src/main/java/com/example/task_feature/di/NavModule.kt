@@ -24,16 +24,18 @@ class NavModule {
              metadata = DialogSceneStrategy.dialog(DialogProperties())
          ){ key->
              ModalEditTask(
+                 onTaskChanged = key.onTaskChanged,
                  taskID = key.taskID,
-                onNavigationEvent = { navEvent->
+                 onNavigationEvent = { navEvent->
                     navigator.handleEvent(navEvent)
                 }
              )
          }
          entry<ModalCreateTaskCardKey>(
              metadata = DialogSceneStrategy.dialog(DialogProperties())
-         ){
+         ){ key->
              ModalCreateTask(
+                 onTaskCreated = key.onTaskCreated,
                  onNavigationEvent = { navEvent ->
                      navigator.handleEvent(navEvent)
                  }

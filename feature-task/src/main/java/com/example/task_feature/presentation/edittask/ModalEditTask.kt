@@ -38,11 +38,13 @@ import com.example.task_feature.util.toDate
 import java.time.Instant
 
 data class ModalEditTaskCardKey(
-    val taskID : Long
+    val taskID : Long,
+    val onTaskChanged : (()->Unit)
 )
 
 @Composable
 fun ModalEditTask(
+    onTaskChanged: () -> Unit,
     taskID : Long,
     onNavigationEvent : (navEvent : NavEvent) -> Unit
 ){
@@ -53,6 +55,7 @@ fun ModalEditTask(
     )
     val taskState by viewModel.taskState.collectAsState()
     ModalEditTaskView(
+        onTaskChanged=  onTaskChanged,
         onNavigationEvent = onNavigationEvent,
         onEvent = { event->
             viewModel.handleEvent(event = event)
@@ -64,142 +67,179 @@ fun ModalEditTask(
 
 @Composable
 fun ModalEditTaskView(
+    onTaskChanged: () -> Unit,
     onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
     onEvent : (event : EditTaskEvent) -> Unit = {},
     taskState : Task = Task(0,"task","descr", Instant.ofEpochMilli(64373443),TaskCategory.UNSPECIFIED)
 ){
     var showMenu by remember { mutableStateOf(false) }
     var showTimePicker by remember { mutableStateOf(false) }
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color.LightGray)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp, horizontal = 12.dp),
+    Box{
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = Color.LightGray)
         ) {
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = taskState.taskName,
-                    fontSize = 20.sp
-                )
-            }
-            Box(
+            Column(
                 modifier = Modifier
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(Color.White)
-                    .padding(8.dp)
-                    ){
-                Column(modifier = Modifier.fillMaxWidth()){
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 12.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
-                        modifier = Modifier
-                            .padding(top = 12.dp, start = 4.dp)
-                            .clickable(onClick = {
-                                showTimePicker = true
-                            }),
-                        text = "Дедлайн: " + (taskState.deadline?.toEpochMilli()?.toDate() ?: "не указан")
+                        text = taskState.taskName,
+                        fontSize = 20.sp
                     )
-                    HorizontalDivider(
-                        color = Color.Gray,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                    Box{
+                }
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White)
+                        .padding(8.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             modifier = Modifier
                                 .padding(top = 12.dp, start = 4.dp)
-                                .clickable { showMenu = true },
-                            text = "Категория: ${taskState.category}"
+                                .clickable(onClick = {
+                                    showTimePicker = true
+                                }),
+                            text = "Дедлайн: " + (taskState.deadline?.toEpochMilli()?.toDate()
+                                ?: "не указан")
                         )
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = {showMenu = false}
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Срочное") },
-                                onClick = {
-                                    onEvent(
-                                        EditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category = TaskCategory.NONURGENT
-                                        )))
-                                    showMenu = false
-                                }
+                        HorizontalDivider(
+                            color = Color.Gray,
+                            thickness = 1.dp,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        Box {
+                            Text(
+                                modifier = Modifier
+                                    .padding(top = 12.dp, start = 4.dp)
+                                    .clickable { showMenu = true },
+                                text = "Категория: ${taskState.category}"
                             )
-                            DropdownMenuItem(
-                                text = { Text("Несрочное") },
-                                onClick = {
-                                    onEvent(
-                                        EditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category = TaskCategory.URGENT
-                                        )))
-                                    showMenu = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Продолжительное") },
-                                onClick = {
-                                    onEvent(
-                                        EditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category = TaskCategory.LONGTIME
-                                        )))
-                                    showMenu = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Повторяющееся") },
-                                onClick = {
-                                    onEvent(
-                                        EditTaskEvent.ChangeTaskState(
-                                        taskState.copy(category = TaskCategory.REPEATABLE
-                                        )))
-                                    showMenu = false
-                                }
-                            )
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = { showMenu = false }
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text("Срочное") },
+                                    onClick = {
+                                        onEvent(
+                                            EditTaskEvent.ChangeTaskState(
+                                                taskState.copy(
+                                                    category = TaskCategory.NONURGENT
+                                                )
+                                            )
+                                        )
+                                        showMenu = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Несрочное") },
+                                    onClick = {
+                                        onEvent(
+                                            EditTaskEvent.ChangeTaskState(
+                                                taskState.copy(
+                                                    category = TaskCategory.URGENT
+                                                )
+                                            )
+                                        )
+                                        showMenu = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Продолжительное") },
+                                    onClick = {
+                                        onEvent(
+                                            EditTaskEvent.ChangeTaskState(
+                                                taskState.copy(
+                                                    category = TaskCategory.LONGTIME
+                                                )
+                                            )
+                                        )
+                                        showMenu = false
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Повторяющееся") },
+                                    onClick = {
+                                        onEvent(
+                                            EditTaskEvent.ChangeTaskState(
+                                                taskState.copy(
+                                                    category = TaskCategory.REPEATABLE
+                                                )
+                                            )
+                                        )
+                                        showMenu = false
+                                    }
+                                )
+                            }
                         }
-                    }
 
-                    HorizontalDivider(
-                        color = Color.Gray,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = taskState.taskDescription,
-                        onValueChange = { newDescription->
-                            onEvent(
-                                EditTaskEvent.ChangeTaskState(
-                                taskState.copy(taskDescription = newDescription)
-                            ))
-                        },
-                        label = {
-                            Text("Описание задания")
-                        },
-                        placeholder = {
-                            Text("Описание задания")
-                        }
-                    )
+                        HorizontalDivider(
+                            color = Color.Gray,
+                            thickness = 1.dp,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        OutlinedTextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = taskState.taskDescription,
+                            onValueChange = { newDescription ->
+                                onEvent(
+                                    EditTaskEvent.ChangeTaskState(
+                                        taskState.copy(taskDescription = newDescription)
+                                    )
+                                )
+                            },
+                            label = {
+                                Text("Описание задания")
+                            },
+                            placeholder = {
+                                Text("Описание задания")
+                            }
+                        )
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Button(onClick = {
+                        onEvent(EditTaskEvent.UpdateTaskInfo() {
+                            onTaskChanged()
+                            onNavigationEvent(NavEvent.NavBack)
+                        })
+                    }) { Text("Сохранить") }
+                    Button(onClick = {
+                        //todo сделать возможность завершения как не важное
+                        onEvent(EditTaskEvent.FinishTask(false) {
+                            onTaskChanged()
+                            onNavigationEvent(NavEvent.NavBack)
+                        })
+                    }) { Text("Завершить") }
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
-                Button(onClick = {
-                    onEvent(EditTaskEvent.UpdateTaskCard())
-                    onNavigationEvent(NavEvent.NavBack)
-                }) { Text("Сохранить") }
-                Button(onClick = {
-                    //todo сделать возможность завершения как не важное
-                    onEvent(EditTaskEvent.FinishTask(false))
-                    onNavigationEvent(NavEvent.NavBack)
-                }) { Text("Завершить")}
-            }
         }
-        if (showTimePicker){
+        if (showTimePicker) {
             DateTimePeeker(
-                selectedTimeMills = if (taskState.deadline!=null) Instant.ofEpochMilli(taskState.deadline!!.toEpochMilli()) else null
-            ) { selectedDeadlineMills->
-                onEvent(EditTaskEvent.ChangeTaskState(newTaskInfo = taskState.copy(deadline = Instant.ofEpochMilli(selectedDeadlineMills))))
+                selectedTimeMills = if (taskState.deadline != null) Instant.ofEpochMilli(
+                    taskState.deadline!!.toEpochMilli()
+                ) else null
+            ) { selectedDeadlineMills ->
+                onEvent(
+                    EditTaskEvent.ChangeTaskState(
+                        newTaskInfo = taskState.copy(
+                            deadline = Instant.ofEpochMilli(
+                                selectedDeadlineMills
+                            )
+                        )
+                    )
+                )
                 showTimePicker = false
             }
         }
@@ -209,5 +249,5 @@ fun ModalEditTaskView(
 @Composable
 @Preview
 fun ModalEditTaskPreview(){
-    ModalEditTaskView()
+    ModalEditTaskView(onTaskChanged = {})
 }

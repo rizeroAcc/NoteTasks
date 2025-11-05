@@ -6,6 +6,7 @@ import com.example.core_navigation.Navigator
 import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.tasklist.presentation.FinishedTaskScreen
 import com.example.tasklist.presentation.tasklist.TaskListScreen
+import com.example.tasklist.presentation.tasklist.TaskListScreenView
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,13 +19,10 @@ class NavModule {
     @IntoSet
     @Provides
     fun provideTaskListNavGraphInstallerProvider(navigator : Navigator) : EntryProviderInstaller = {
-        entry<TaskListScreen> {
+        entry<TaskListScreen> { key->
             TaskListScreen(
-                onCardClick = {
-                    navigator.handleEvent(NavEvent.ShowEditTaskModal)
-                },
-                onCreateTaskClick = {
-                    navigator.handleEvent(NavEvent.ShowCreateTaskModal)
+                onNavigateTo = { event ->
+                    navigator.handleEvent(event)
                 }
             )
         }

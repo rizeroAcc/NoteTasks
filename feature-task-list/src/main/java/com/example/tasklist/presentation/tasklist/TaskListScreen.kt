@@ -15,24 +15,43 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.core_models.domain.Task
+import com.example.core_navigation.NavEvent
 import com.example.tasklist.presentation.components.TaskCard
+import com.example.tasklist.util.toDate
 
 object TaskListScreen
 
-@Deprecated("For test only")
-data class TaskDeatils(
-    val taskTitle: String,
-    val taskDescription: String,
-    val deadline : String? = null,
-    val taskCategory : String
-)
+
+ @Composable
+ fun TaskListScreen(
+     onNavigateTo : (navigationEvent: NavEvent)->Unit
+ ){
+     val viewModel = hiltViewModel<TaskListScreenViewModel>()
+     val taskList by viewModel.taskList.collectAsState()
+
+     TaskListScreenView(
+         onNavigateTo = onNavigateTo,
+         taskListState = taskList,
+         onEvent = { event ->
+             viewModel.handleEvent(event)
+         }
+     )
+ }
 
 @Composable
-fun TaskListScreen(onCreateTaskClick : () -> Unit, onCardClick: (taskDetails : TaskDeatils) -> Unit){
+fun TaskListScreenView(
+    onNavigateTo: (NavEvent) -> Unit,
+    taskListState : List<Task>,
+    onEvent : (event : TaskListScreenEvent)->Unit = {},
+){
     Box(modifier = Modifier.fillMaxSize()){
         LazyColumn(
             modifier = Modifier
@@ -40,17 +59,28 @@ fun TaskListScreen(onCreateTaskClick : () -> Unit, onCardClick: (taskDetails : T
             verticalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(24.dp)
         ) {
-            items(30){
-                TaskCard("Имя задания", "Сделай че-то много - много - много - много - много - текста", onCardClick = {
-                    onCardClick(
-                        TaskDeatils("Имя задания", taskDescription = "Сделай че-то много - много - много - много - много - текста", taskCategory = "Срочно", deadline = "26.05 23:30")
-                    )
-                })
+            items(taskListState.size, key = {taskListState[it].id}){ index->
+                TaskCard(
+                    taskName = taskListState[index].taskName,
+                    shortDescription = taskListState[index].taskDescription,
+                    taskCategory = taskListState[index].category,
+                    onCardClick = {
+                        onNavigateTo(NavEvent.ShowEditTaskModal(taskID = taskListState[index].id, onTaskUpdated = {
+                            onEvent(TaskListScreenEvent.TaskListUpdated)
+                        }))
+                    },
+                    deadline = taskListState[index].deadline?.toEpochMilli()?.toDate(),
+                    modifier = Modifier.animateItem()
+                )
             }
         }
         Button(
             onClick = {
-                onCreateTaskClick()
+                onNavigateTo(NavEvent.ShowCreateTaskModal(
+                    onTaskCreated = {
+                        onEvent(TaskListScreenEvent.TaskListUpdated)
+                    }
+                ))
             },
             modifier = Modifier
                 .padding(end = 20.dp, bottom = 20.dp)

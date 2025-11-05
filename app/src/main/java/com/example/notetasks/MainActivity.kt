@@ -11,7 +11,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -21,7 +20,6 @@ import com.example.core_navigation.NavEvent
 import com.example.core_navigation.Navigator
 import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.notetasks.ui.components.BottomBar
-import com.example.notetasks.ui.components.ModalNavigation
 import com.example.notetasks.ui.theme.NoteTasksTheme
 import com.example.task_feature.presentation.createtask.ModalCreateTaskCardKey
 import com.example.task_feature.presentation.edittask.ModalEditTaskCardKey
@@ -46,8 +44,18 @@ class MainActivity : ComponentActivity() {
                 NavEvent.NavBack -> navigator.goBack()
                 NavEvent.NavToFinishedTaskList -> navigator.goTo(FinishedTaskListScreen)
                 NavEvent.NavToCurrentTaskList -> navigator.goTo(TaskListScreen)
-                NavEvent.ShowEditTaskModal -> navigator.goTo(ModalEditTaskCardKey(1))
-                NavEvent.ShowCreateTaskModal -> navigator.goTo(ModalCreateTaskCardKey())
+                is NavEvent.ShowEditTaskModal -> {
+                    navigator.goTo(
+                        ModalEditTaskCardKey(event.taskID) {
+                            event.onTaskUpdated?.let { it() }
+                        }
+                    )
+                }
+                is NavEvent.ShowCreateTaskModal -> {
+                    navigator.goTo(ModalCreateTaskCardKey() {
+                        event.onTaskCreated?.let { it() }
+                    })
+                }
             }
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {

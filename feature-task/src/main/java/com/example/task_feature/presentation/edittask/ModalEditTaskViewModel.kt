@@ -34,17 +34,19 @@ class ModalEditTaskViewModel@AssistedInject constructor(
     fun handleEvent(event : EditTaskEvent){
         //todo дожидаться завершения операций, а не оставлять корутины
         when(event){
-            is EditTaskEvent.FinishTask -> CoroutineScope(EmptyCoroutineContext).launch {
+            is EditTaskEvent.FinishTask -> viewModelScope.launch {
                 taskRepository.finishTask(
                     task = taskState.value,
                     finishTime = Instant.now(),
                     finishedAsUnImportant = event.finishedAsUnimportant
                 )
+                event.onTaskChanged()
             }
 
-            is EditTaskEvent.UpdateTaskCard -> {
-                CoroutineScope(EmptyCoroutineContext).launch {
+            is EditTaskEvent.UpdateTaskInfo -> {
+                viewModelScope.launch {
                     taskRepository.updateTask(task = taskState.value)
+                    event.onTaskChanged()
                 }
             }
 

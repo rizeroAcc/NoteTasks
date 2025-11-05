@@ -30,9 +30,10 @@ class ModalCreateTaskViewModel @Inject constructor(
             is CreateTaskEvent.ChangeTaskState -> {
                 taskState.update { event.newTaskInfo }
             }
-            CreateTaskEvent.CreateTask -> {
+            is CreateTaskEvent.CreateTask -> {
                 CoroutineScope(EmptyCoroutineContext).launch {
                     taskRepository.createTask(task = taskState.value)
+                    event.onTaskCreated()
                 }
             }
         }

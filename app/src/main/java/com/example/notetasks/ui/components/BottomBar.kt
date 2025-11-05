@@ -27,9 +27,9 @@ fun BottomBar(
                 )
             },
             label = { Text("Current tasks") },
-            selected = currentDestination == TaskListScreen,
+            selected = currentDestination is TaskListScreen,
             onClick = {
-                if (currentDestination != TaskListScreen) {
+                if (currentDestination !is TaskListScreen) {
                     navigator.goTo(TaskListScreen)
                 }
             }

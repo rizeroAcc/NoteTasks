@@ -38,15 +38,17 @@ import com.example.task_feature.presentation.components.SimpleTextField
 import com.example.task_feature.util.toDate
 import java.time.Instant
 
-class ModalCreateTaskCardKey
+class ModalCreateTaskCardKey(val onTaskCreated : (()->Unit)? = null)
 
 @Composable
 fun ModalCreateTask(
+    onTaskCreated: (() -> Unit)? = null,
     onNavigationEvent : (navEvent : NavEvent) -> Unit
 ){
     val viewModel : ModalCreateTaskViewModel = hiltViewModel<ModalCreateTaskViewModel>()
     val taskState by viewModel.taskState.collectAsState()
     ModalCreateTaskView(
+        onTaskCreated = onTaskCreated,
         onNavigationEvent = onNavigationEvent,
         onEvent = { event->
             viewModel.handleEvent(event = event)
@@ -57,6 +59,7 @@ fun ModalCreateTask(
 
 @Composable
 fun ModalCreateTaskView(
+    onTaskCreated: (() -> Unit)? = null,
     onNavigationEvent: (navEvent: NavEvent) -> Unit = {},
     onEvent : (event : CreateTaskEvent) -> Unit = {},
     taskState : Task = Task(0, "", "", null, TaskCategory.UNSPECIFIED)
@@ -193,8 +196,13 @@ fun ModalCreateTaskView(
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Button(onClick = {
-                        onEvent(CreateTaskEvent.CreateTask )
-                        onNavigationEvent(NavEvent.NavBack)
+                        onEvent(CreateTaskEvent.CreateTask(
+                            onTaskCreated = {
+                            onTaskCreated?.invoke()
+                            onNavigationEvent(NavEvent.NavBack)
+                            }
+                        ))
+
                     }) { Text("Создать") }
                 }
             }
