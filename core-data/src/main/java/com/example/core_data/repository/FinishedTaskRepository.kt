@@ -1,8 +1,8 @@
-package com.example.task_feature.data.repository
+package com.example.core_data.repository
 
+import com.example.core_data.util.toDomain
 import com.example.core_database.datasource.FinishedTaskDatasource
-import com.example.task_feature.domain.FinishedTask
-import com.example.task_feature.util.toDomain
+import com.example.core_models.domain.FinishedTask
 import javax.inject.Inject
 
 class FinishedTaskRepository@Inject constructor(

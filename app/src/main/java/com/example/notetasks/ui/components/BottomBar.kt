@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.core_navigation.Navigator
 import com.example.tasklist.presentation.FinishedTaskListScreen
-import com.example.tasklist.presentation.TaskListScreen
+import com.example.tasklist.presentation.tasklist.TaskListScreen
 
 @Composable
 fun BottomBar(

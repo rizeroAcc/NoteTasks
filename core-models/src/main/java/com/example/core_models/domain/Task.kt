@@ -1,4 +1,4 @@
-package com.example.task_feature.domain
+package com.example.core_models.domain
 
 import java.time.Instant
 

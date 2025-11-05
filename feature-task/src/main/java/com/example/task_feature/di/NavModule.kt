@@ -1,5 +1,7 @@
 package com.example.task_feature.di
 
+import androidx.compose.ui.window.DialogProperties
+import androidx.navigation3.scene.DialogSceneStrategy
 import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.Navigator
 import com.example.task_feature.presentation.createtask.ModalCreateTask
@@ -18,7 +20,9 @@ class NavModule {
      @IntoSet
      @Provides
      fun provideNavGraphEntryProviderInstaller(navigator: Navigator) : EntryProviderInstaller = {
-         entry<ModalEditTaskCardKey>{ key->
+         entry<ModalEditTaskCardKey>(
+             metadata = DialogSceneStrategy.dialog(DialogProperties())
+         ){ key->
              ModalEditTask(
                  taskID = key.taskID,
                 onNavigationEvent = { navEvent->
@@ -26,7 +30,9 @@ class NavModule {
                 }
              )
          }
-         entry<ModalCreateTaskCardKey> {
+         entry<ModalCreateTaskCardKey>(
+             metadata = DialogSceneStrategy.dialog(DialogProperties())
+         ){
              ModalCreateTask(
                  onNavigationEvent = { navEvent ->
                      navigator.handleEvent(navEvent)

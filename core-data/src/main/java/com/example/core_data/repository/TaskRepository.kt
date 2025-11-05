@@ -1,11 +1,11 @@
-package com.example.task_feature.data.repository
+package com.example.core_data.repository
 
+import com.example.core_data.util.toDatabaseEntity
+import com.example.core_data.util.toDomain
+import com.example.core_data.util.toFinishedTaskEntity
 import com.example.core_database.datasource.FinishedTaskDatasource
 import com.example.core_database.datasource.TaskDatasource
-import com.example.task_feature.domain.Task
-import com.example.task_feature.util.toDatabaseEntity
-import com.example.task_feature.util.toDomain
-import com.example.task_feature.util.toFinishedTaskEntity
+import com.example.core_models.domain.Task
 import java.time.Instant
 import javax.inject.Inject
 

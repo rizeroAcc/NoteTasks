@@ -5,7 +5,7 @@ import com.example.core_navigation.NavEvent
 import com.example.core_navigation.Navigator
 import com.example.tasklist.presentation.FinishedTaskListScreen
 import com.example.tasklist.presentation.FinishedTaskScreen
-import com.example.tasklist.presentation.TaskListScreen
+import com.example.tasklist.presentation.tasklist.TaskListScreen
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,16 +19,14 @@ class NavModule {
     @Provides
     fun provideTaskListNavGraphInstallerProvider(navigator : Navigator) : EntryProviderInstaller = {
         entry<TaskListScreen> {
-            TaskListScreen(onCardClick = { taskDeatils ->
-                navigator.handleEvent(NavEvent.ShowTaskCard(
-                    taskTitle = taskDeatils.taskTitle,
-                    taskCategory = taskDeatils.taskCategory,
-                    taskDescription = taskDeatils.taskDescription,
-                    deadline = taskDeatils.deadline
-                ))
-            }, onCreateTaskClick = {
-                navigator.handleEvent(NavEvent.ShowCreateTaskModal)
-            })
+            TaskListScreen(
+                onCardClick = {
+                    navigator.handleEvent(NavEvent.ShowEditTaskModal)
+                },
+                onCreateTaskClick = {
+                    navigator.handleEvent(NavEvent.ShowCreateTaskModal)
+                }
+            )
         }
         entry<FinishedTaskListScreen>{
             FinishedTaskScreen(){

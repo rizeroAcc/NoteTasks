@@ -1,10 +1,11 @@
 package com.example.task_feature.presentation.edittask
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.task_feature.data.repository.TaskRepository
-import com.example.task_feature.domain.Task
-import com.example.task_feature.domain.TaskCategory
+import com.example.core_data.repository.TaskRepository
+import com.example.core_models.domain.Task
+import com.example.core_models.domain.TaskCategory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,14 +26,15 @@ class ModalEditTaskViewModel@AssistedInject constructor(
         Task(0, "", "", null, TaskCategory.UNSPECIFIED)
     )
     init {
+        Log.d("VM", "Created")
         viewModelScope.launch {
             taskState.value = taskRepository.getTask(id = taskID)
         }
     }
-    fun handleEvent(event : ModalEditTaskEvent){
+    fun handleEvent(event : EditTaskEvent){
         //todo дожидаться завершения операций, а не оставлять корутины
         when(event){
-            is ModalEditTaskEvent.FinishTask -> CoroutineScope(EmptyCoroutineContext).launch {
+            is EditTaskEvent.FinishTask -> CoroutineScope(EmptyCoroutineContext).launch {
                 taskRepository.finishTask(
                     task = taskState.value,
                     finishTime = Instant.now(),
@@ -40,14 +42,19 @@ class ModalEditTaskViewModel@AssistedInject constructor(
                 )
             }
 
-            is ModalEditTaskEvent.UpdateTaskCard -> {
+            is EditTaskEvent.UpdateTaskCard -> {
                 CoroutineScope(EmptyCoroutineContext).launch {
                     taskRepository.updateTask(task = taskState.value)
                 }
             }
 
-            is ModalEditTaskEvent.ChangeTaskState -> taskState.update { event.newTaskInfo }
+            is EditTaskEvent.ChangeTaskState -> taskState.update { event.newTaskInfo }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("VM","VM destroyed")
+        super.onCleared()
     }
     @AssistedFactory
     interface Factory {

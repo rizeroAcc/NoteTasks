@@ -1,4 +1,4 @@
-package com.example.tasklist.presentation
+package com.example.tasklist.presentation.tasklist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

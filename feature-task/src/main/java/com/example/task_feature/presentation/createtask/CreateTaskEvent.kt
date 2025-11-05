@@ -1,7 +1,6 @@
 package com.example.task_feature.presentation.createtask
 
-import com.example.task_feature.domain.Task
-import com.example.task_feature.presentation.edittask.ModalEditTaskEvent
+import com.example.core_models.domain.Task
 
 sealed class CreateTaskEvent {
     class ChangeTaskState(val newTaskInfo : Task) : CreateTaskEvent()

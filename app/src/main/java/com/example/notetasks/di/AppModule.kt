@@ -1,7 +1,7 @@
 package com.example.notetasks.di
 
 import com.example.core_navigation.Navigator
-import com.example.tasklist.presentation.TaskListScreen
+import com.example.tasklist.presentation.tasklist.TaskListScreen
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,10 +1,10 @@
-package com.example.task_feature.util
+package com.example.core_data.util
 
 import com.example.core_database.entity.FinishedTaskEntity
 import com.example.core_database.entity.TaskEntity
-import com.example.task_feature.domain.FinishedTask
-import com.example.task_feature.domain.Task
-import com.example.task_feature.domain.TaskCategory
+import com.example.core_models.domain.FinishedTask
+import com.example.core_models.domain.Task
+import com.example.core_models.domain.TaskCategory
 import java.time.Instant
 
 fun Task.toDatabaseEntity() : TaskEntity = TaskEntity(
@@ -30,8 +30,8 @@ fun TaskEntity.toDomain() : Task = Task(
     id = id,
     taskName = taskName,
     taskDescription = taskDescription,
-    deadline = if (deadline!= null ) Instant.ofEpochMilli(deadline!!) else null,
-    category = TaskCategory.fromString(taskCategory)
+    deadline = if (deadline != null) Instant.ofEpochMilli(deadline!!) else null,
+    category = TaskCategory.Companion.fromString(taskCategory)
 )
 
 fun FinishedTaskEntity.toDomain() : FinishedTask = FinishedTask(

@@ -1,9 +1,9 @@
-package com.example.task_feature.di
+package com.example.core_data.di
 
+import com.example.core_data.repository.FinishedTaskRepository
+import com.example.core_data.repository.TaskRepository
 import com.example.core_database.datasource.FinishedTaskDatasource
 import com.example.core_database.datasource.TaskDatasource
-import com.example.task_feature.data.repository.FinishedTaskRepository
-import com.example.task_feature.data.repository.TaskRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,8 +17,8 @@ class RepositoryModule {
         taskDatasource: TaskDatasource,
         finishedTaskDatasource: FinishedTaskDatasource
     ) : TaskRepository = TaskRepository(
-            taskDatasource = taskDatasource,
-            finishedTaskDatasource = finishedTaskDatasource
+        taskDatasource = taskDatasource,
+        finishedTaskDatasource = finishedTaskDatasource
     )
 
     @Provides

@@ -1,12 +1,12 @@
-package com.example.task_feature.di
+package com.example.core_data.di
 
-import com.example.core_database.TaskDatabase
+import com.example.core_data.datasource.FinishedTaskDatasourceImpl
+import com.example.core_data.datasource.TaskDatasourceImpl
 import com.example.core_database.dao.FinishedTaskDAO
 import com.example.core_database.dao.TaskDAO
 import com.example.core_database.datasource.FinishedTaskDatasource
 import com.example.core_database.datasource.TaskDatasource
-import com.example.task_feature.data.datasource.FinishedTaskDatasourceImpl
-import com.example.task_feature.data.datasource.TaskDatasourceImpl
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

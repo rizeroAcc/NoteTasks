@@ -1,16 +1,15 @@
 package com.example.task_feature.presentation.createtask
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.task_feature.data.repository.TaskRepository
-import com.example.task_feature.domain.Task
-import com.example.task_feature.domain.TaskCategory
-import com.example.task_feature.presentation.edittask.ModalEditTaskEvent
+import com.example.core_data.repository.TaskRepository
+import com.example.core_models.domain.Task
+import com.example.core_models.domain.TaskCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.Instant
 import javax.inject.Inject
 import kotlin.coroutines.EmptyCoroutineContext
 
@@ -18,6 +17,9 @@ import kotlin.coroutines.EmptyCoroutineContext
 class ModalCreateTaskViewModel @Inject constructor(
     val taskRepository: TaskRepository
 ) : ViewModel() {
+    init {
+        Log.d("VM", "Created")
+    }
     val taskState = MutableStateFlow<Task>(
         Task(0, "", "", null, TaskCategory.UNSPECIFIED)
     )
@@ -34,5 +36,10 @@ class ModalCreateTaskViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        Log.d("VM", "Cleared")
+        super.onCleared()
     }
 }

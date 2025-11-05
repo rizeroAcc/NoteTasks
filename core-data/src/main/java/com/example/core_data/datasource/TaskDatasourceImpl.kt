@@ -1,4 +1,4 @@
-package com.example.task_feature.data.datasource
+package com.example.core_data.datasource
 
 import com.example.core_database.dao.TaskDAO
 import com.example.core_database.datasource.TaskDatasource

@@ -30,9 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.core_models.domain.Task
+import com.example.core_models.domain.TaskCategory
 import com.example.core_navigation.NavEvent
-import com.example.task_feature.domain.Task
-import com.example.task_feature.domain.TaskCategory
 import com.example.task_feature.presentation.components.DateTimePeeker
 import com.example.task_feature.presentation.components.SimpleTextField
 import com.example.task_feature.util.toDate
@@ -62,7 +62,7 @@ fun ModalCreateTaskView(
     taskState : Task = Task(0, "", "", null, TaskCategory.UNSPECIFIED)
 ){
     var showMenu by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
     Box{
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -106,7 +106,7 @@ fun ModalCreateTaskView(
                             modifier = Modifier
                                 .padding(top = 12.dp, start = 4.dp)
                                 .clickable(onClick = {
-                                    showDialog = true
+                                    showTimePicker = true
                                 }),
                             text = "Дедлайн: " + (taskState.deadline?.toEpochMilli()?.toDate() ?: "не указан")
                         )
@@ -147,7 +147,7 @@ fun ModalCreateTaskView(
                                     }
                                 )
                                 DropdownMenuItem(
-                                    text = { Text("Долгосрочное") },
+                                    text = { Text("Продолжительное") },
                                     onClick = {
                                         onEvent(
                                             CreateTaskEvent.ChangeTaskState(
@@ -199,12 +199,12 @@ fun ModalCreateTaskView(
                 }
             }
         }
-        if (showDialog){
+        if (showTimePicker){
             DateTimePeeker(
-                selectedTimeMills = if (taskState.deadline!=null) Instant.ofEpochMilli(taskState.deadline.toEpochMilli()) else null
+                selectedTimeMills = if (taskState.deadline!=null) Instant.ofEpochMilli(taskState.deadline!!.toEpochMilli()) else null
             ) { selectedDeadlineMills->
                 onEvent(CreateTaskEvent.ChangeTaskState(newTaskInfo = taskState.copy(deadline = Instant.ofEpochMilli(selectedDeadlineMills))))
-                showDialog = false
+                showTimePicker = false
             }
         }
     }

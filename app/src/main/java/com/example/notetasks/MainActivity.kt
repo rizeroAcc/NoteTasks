@@ -8,11 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.NavEvent
@@ -23,7 +25,7 @@ import com.example.notetasks.ui.components.ModalNavigation
 import com.example.notetasks.ui.theme.NoteTasksTheme
 import com.example.task_feature.presentation.createtask.ModalCreateTaskCardKey
 import com.example.task_feature.presentation.edittask.ModalEditTaskCardKey
-import com.example.tasklist.presentation.TaskListScreen
+import com.example.tasklist.presentation.tasklist.TaskListScreen
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,7 +34,6 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var navigator : Navigator
-
     @Inject
     lateinit var entryProviderScopes: Set<@JvmSuppressWildcards EntryProviderInstaller>
 
@@ -45,10 +46,8 @@ class MainActivity : ComponentActivity() {
                 NavEvent.NavBack -> navigator.goBack()
                 NavEvent.NavToFinishedTaskList -> navigator.goTo(FinishedTaskListScreen)
                 NavEvent.NavToCurrentTaskList -> navigator.goTo(TaskListScreen)
-                NavEvent.HideAllModal -> navigator.hideAllModalWindows()
-                NavEvent.HideModal -> navigator.hideModalWindow()
-                is NavEvent.ShowTaskCard -> navigator.showModal(ModalEditTaskCardKey(0))
-                NavEvent.ShowCreateTaskModal -> navigator.showModal(ModalCreateTaskCardKey())
+                NavEvent.ShowEditTaskModal -> navigator.goTo(ModalEditTaskCardKey(1))
+                NavEvent.ShowCreateTaskModal -> navigator.goTo(ModalCreateTaskCardKey())
             }
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -59,12 +58,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             NoteTasksTheme {
                 val currentDestination = navigator.backStack.lastOrNull()
-                val currentModal = navigator.modalWindowBackStack.lastOrNull()
+                val dialogStrategy = remember { DialogSceneStrategy<Any>() }
                 Scaffold(
                     bottomBar = {
-                        if (navigator.modalWindowBackStack.isEmpty()){
-                            BottomBar(navigator = navigator, currentDestination = currentDestination)
-                        }
+                        BottomBar(navigator = navigator, currentDestination = currentDestination)
                     }
                 )
                 { innerPadding->
@@ -81,18 +78,9 @@ class MainActivity : ComponentActivity() {
                         entryDecorators = listOf(
                             rememberSaveableStateHolderNavEntryDecorator(),
                             rememberViewModelStoreNavEntryDecorator()
-                        )
+                        ),
+                        sceneStrategy = dialogStrategy
                     )
-                    if (currentModal != null) {
-                        ModalNavigation(
-                            modifier = Modifier.padding(innerPadding),
-                            backStack = navigator.modalWindowBackStack,
-                            onDismiss = { navigator.handleEvent(NavEvent.HideModal) },
-                            entryProvider = entryProvider {
-                                entryProviderScopes.forEach { builder -> this.builder() }
-                            }
-                        )
-                    }
                 }
             }
         }
