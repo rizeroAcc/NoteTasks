@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class FinishedTaskListViewModel @Inject constructor(
@@ -18,6 +17,16 @@ class FinishedTaskListViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             finishedTaskList.value = finishedTaskRepository.getAllFinishedTask()
+        }
+    }
+    fun handleEvent(event: FinishedTaskListEvent){
+        when(event){
+            is FinishedTaskListEvent.FinishTask -> {
+                viewModelScope.launch {
+                    finishedTaskRepository.deleteFinishedTaskInfo(event.task)
+                    finishedTaskList.value = finishedTaskRepository.getAllFinishedTask()
+                }
+            }
         }
     }
 }

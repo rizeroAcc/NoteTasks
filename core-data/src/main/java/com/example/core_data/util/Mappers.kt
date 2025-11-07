@@ -22,7 +22,7 @@ fun Task.toFinishedTaskEntity(finishTime : Instant, finishedAsUnimportant : Bool
     deadline = deadline?.toEpochMilli(),
     taskCategory = category.toString(),
     finishTimestamp = finishTime.toEpochMilli(),
-    finishedInTime = finishedAsUnimportant || deadline?.isBefore(finishTime) ?: true,
+    finishedInTime = finishedAsUnimportant || deadline?.isAfter(finishTime) ?: true,
     finishedAsUnimportant = finishedAsUnimportant,
 )
 
