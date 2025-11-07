@@ -1,12 +1,11 @@
 package com.example.tasklist.di
 
 import com.example.core_navigation.EntryProviderInstaller
-import com.example.core_navigation.NavEvent
 import com.example.core_navigation.Navigator
-import com.example.tasklist.presentation.FinishedTaskListScreen
-import com.example.tasklist.presentation.FinishedTaskScreen
+import com.example.tasklist.finished_tasklist.FinishedTaskListScreen
+import com.example.tasklist.finished_tasklist.FinishedTaskScreen
+import com.example.tasklist.finished_tasklist.FinishedTaskScreenView
 import com.example.tasklist.presentation.tasklist.TaskListScreen
-import com.example.tasklist.presentation.tasklist.TaskListScreenView
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,9 +26,7 @@ class NavModule {
             )
         }
         entry<FinishedTaskListScreen>{
-            FinishedTaskScreen(){
-                navigator.goBack()
-            }
+            FinishedTaskScreen()
         }
     }
 }

@@ -7,8 +7,8 @@ data class FinishedTask(
     val taskName : String,
     val taskDescription: String,
     val deadline : Instant? = null,
-    val taskCategory : String,
-    val finishTimestamp : Long,
+    val taskCategory : TaskCategory,
+    val finishTimestamp : Instant,
     val finishedInTime : Boolean,
     val finishedAsUnimportant : Boolean,
 )

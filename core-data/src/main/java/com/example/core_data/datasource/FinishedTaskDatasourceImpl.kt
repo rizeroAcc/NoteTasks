@@ -8,6 +8,10 @@ import javax.inject.Inject
 class FinishedTaskDatasourceImpl @Inject constructor(
     val finishedTaskDAO: FinishedTaskDAO
 ) : FinishedTaskDatasource {
+    override suspend fun deleteFinishedTaskInfo(finishedTask: FinishedTaskEntity) {
+        finishedTaskDAO.deleteFinishedTask(finishedTask = finishedTask)
+    }
+
     override suspend fun addNewFinishedTask(finishedTask: FinishedTaskEntity) =
         finishedTaskDAO.insertFinishedTask(finishedTask = finishedTask)
 

@@ -18,7 +18,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.core_navigation.EntryProviderInstaller
 import com.example.core_navigation.NavEvent
 import com.example.core_navigation.Navigator
-import com.example.tasklist.presentation.FinishedTaskListScreen
+import com.example.tasklist.finished_tasklist.FinishedTaskListScreen
 import com.example.notetasks.ui.components.BottomBar
 import com.example.notetasks.ui.theme.NoteTasksTheme
 import com.example.task_feature.presentation.createtask.ModalCreateTaskCardKey
@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         navigator.setEventHandler { event ->
             when (event) {
                 NavEvent.NavBack -> navigator.goBack()
-                NavEvent.NavToFinishedTaskList -> navigator.goTo(FinishedTaskListScreen)
+                NavEvent.NavToFinishedTaskList -> navigator.goTo(FinishedTaskListScreen())
                 NavEvent.NavToCurrentTaskList -> navigator.goTo(TaskListScreen)
                 is NavEvent.ShowEditTaskModal -> {
                     navigator.goTo(

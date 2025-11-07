@@ -61,15 +61,12 @@ fun TaskListScreenView(
         ) {
             items(taskListState.size, key = {taskListState[it].id}){ index->
                 TaskCard(
-                    taskName = taskListState[index].taskName,
-                    shortDescription = taskListState[index].taskDescription,
-                    taskCategory = taskListState[index].category,
+                    task = taskListState[index],
                     onCardClick = {
                         onNavigateTo(NavEvent.ShowEditTaskModal(taskID = taskListState[index].id, onTaskUpdated = {
                             onEvent(TaskListScreenEvent.TaskListUpdated)
                         }))
                     },
-                    deadline = taskListState[index].deadline?.toEpochMilli()?.toDate(),
                     modifier = Modifier.animateItem()
                 )
             }

@@ -24,16 +24,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.core_models.domain.Task
 import com.example.core_models.domain.TaskCategory
+import com.example.tasklist.util.toDate
+import java.time.Instant
 
 @Composable
 fun TaskCard(
-    taskName : String,
-    shortDescription : String,
-    taskCategory: TaskCategory,
+    task: Task,
     onCardClick:()->Unit,
     modifier: Modifier = Modifier,
-    deadline : String? = null,
 ){
     Card(modifier = modifier
         .fillMaxWidth(),
@@ -47,22 +47,26 @@ fun TaskCard(
                     .fillMaxWidth()
                     .padding(top = 4.dp),
                 horizontalArrangement = Arrangement.Center) {
-                Text(text = taskName, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-            }
-            if (deadline != null){
                 Text(
-                    text = "Дедлайн: " + deadline,
+                    text = task.taskName,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            if (task.deadline != null){
+                Text(
+                    text = "Дедлайн: " + task.deadline!!.toEpochMilli().toDate(),
                     modifier = Modifier.padding(8.dp)
                 )
                 HorizontalDivider(modifier.padding(horizontal = 8.dp), thickness = 1.dp, color = Color.Black)
             }
-            Text(text = "Категория:$taskCategory", modifier = Modifier.padding(8.dp))
+            Text(text = "Категория:${task.category}", modifier = Modifier.padding(8.dp))
             HorizontalDivider(modifier.padding(horizontal = 8.dp), thickness = 1.dp, color = Color.Black)
             Text(
                 modifier = Modifier.
                     padding(8.dp).
                     horizontalScroll(rememberScrollState()),
-                text = shortDescription
+                text = task.taskDescription
             )
         }
     }
@@ -72,10 +76,12 @@ fun TaskCard(
 @Composable
 fun TaskCardPreview(){
     TaskCard(
-        taskName = "Имя задания",
-        shortDescription = "Сделай че-то",
-        taskCategory = TaskCategory.LONGTIME,
-        deadline = "21.11/13:30 ",
+        task = Task(
+            taskName = "Имя задания",
+            taskDescription = "Сделай че-то",
+            category = TaskCategory.LONGTIME,
+            deadline = Instant.ofEpochSecond(263424),
+        ),
         onCardClick = {}
     )
 }

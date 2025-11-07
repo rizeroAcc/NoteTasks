@@ -39,8 +39,19 @@ fun FinishedTaskEntity.toDomain() : FinishedTask = FinishedTask(
     taskName = taskName,
     taskDescription = taskDescription,
     deadline = (if (deadline != null) Instant.ofEpochMilli(deadline!!) else null),
-    taskCategory = taskCategory,
-    finishTimestamp = finishTimestamp,
+    taskCategory = TaskCategory.fromString(taskCategory),
+    finishTimestamp = Instant.ofEpochMilli(finishTimestamp),
+    finishedInTime = finishedInTime,
+    finishedAsUnimportant = finishedAsUnimportant
+)
+
+fun FinishedTask.toEntity() : FinishedTaskEntity = FinishedTaskEntity(
+    id = id,
+    taskName = taskName,
+    taskDescription = taskDescription,
+    deadline = deadline?.toEpochMilli(),
+    taskCategory = taskCategory.toString(),
+    finishTimestamp = finishTimestamp.toEpochMilli(),
     finishedInTime = finishedInTime,
     finishedAsUnimportant = finishedAsUnimportant
 )

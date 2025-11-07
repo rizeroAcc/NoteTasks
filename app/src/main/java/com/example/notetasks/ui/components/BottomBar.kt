@@ -9,7 +9,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.core_navigation.Navigator
-import com.example.tasklist.presentation.FinishedTaskListScreen
+import com.example.tasklist.finished_tasklist.FinishedTaskListScreen
 import com.example.tasklist.presentation.tasklist.TaskListScreen
 
 @Composable
@@ -44,10 +44,10 @@ fun BottomBar(
                 )
             },
             label = { Text("Finished tasks") },
-            selected = currentDestination == FinishedTaskListScreen,
+            selected = currentDestination is FinishedTaskListScreen,
             onClick = {
-                if (currentDestination != FinishedTaskListScreen) {
-                    navigator.goTo(FinishedTaskListScreen)
+                if (currentDestination !is FinishedTaskListScreen) {
+                    navigator.goTo(FinishedTaskListScreen())
                 }
             }
         )
